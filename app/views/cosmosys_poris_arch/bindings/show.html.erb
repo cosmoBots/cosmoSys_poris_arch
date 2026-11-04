@@ -1,0 +1,53 @@
+<h2><%= @binding.system.subject %> → <%= @binding.component.subject %></h2>
+<p><%= link_to @binding.system.csid, issue_path(@binding.system) %> ↔ <%= link_to @binding.component.csid, issue_path(@binding.component) %></p>
+<p>Simulación local de esta sesión. No modifica el CAD original, los valores predeterminados ni equipos reales.</p>
+<div id="poris-arch-simulation" data-binding-id="<%= @binding.id %>" data-commit-url="<%= commit_project_poris_state_path(@binding.system.project) %>" data-csrf-token="<%= form_authenticity_token %>">
+  <%= render partial: 'cosmosys_arch/cad_imports/viewer', locals: {poris_simulation: true} %>
+</div>
+<% content_for :sidebar do %>
+  <div class="box poris-sidebar-viewer-panel">
+    <div id="poris-arch-panel"></div>
+    <p role="status" data-simulation-status>Esperando al visor CAD…</p>
+  </div>
+<% end %>
+<script type="application/json" id="poris-arch-model"><%= raw json_escape(@model_xml.to_json) %></script>
+<script type="application/json" id="poris-arch-state"><%= raw json_escape(@runtime_state.to_json) %></script>
+<h3>Correspondencias</h3>
+<table class="list"><thead><tr><th>Parámetro</th><th>Grado de libertad</th><th>Conversión CAD = m × x + h</th><th>Opciones (CSID → x)</th><th></th></tr></thead><tbody>
+<% @binding.parameter_links.includes(:parameter, :dof).each do |link| %>
+  <% next unless link.parameter.visible?(User.current) && link.dof.visible?(User.current) %>
+  <tr><td><%= link.parameter.csid %> — <%= link.parameter.subject %></td><td><%= link.dof.csid %> — <%= link.dof.subject %></td><td><%= link.multiplier %> × x + <%= link.offset %></td><td><code><%= link.discrete_values %></code></td><td>
+    <% if @binding.editable_by?(User.current) %><%= button_to 'Quitar', poris_arch_remove_parameter_path(@project, @binding, link) %><% end %>
+  </td></tr>
+<% end %>
+</tbody></table>
+<% if @binding.editable_by?(User.current) %>
+  <%= form_tag poris_arch_binding_path(@project, @binding) do %>
+    <p><%= label_tag :trigger, 'Actuar al' %> <%= select_tag :trigger, options_for_select([['Ejecutar comando de actuación', 'command'], ['Hacer commit', 'commit']], @binding.trigger) %> <%= submit_tag 'Guardar política' %></p>
+  <% end %>
+  <h3>Añadir correspondencia</h3>
+  <%= form_tag poris_arch_parameters_path(@project, @binding) do %>
+    <p><%= label_tag :parameter_csid, 'Parámetro PORIS' %> <%= select_tag :parameter_csid, options_for_select(@parameters.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
+    <p><%= label_tag :dof_csid, 'Grado de libertad' %> <%= select_tag :dof_csid, options_for_select(@dofs.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
+    <p><%= label_tag :multiplier, 'm' %> <%= number_field_tag :multiplier, 1, step: 'any', required: true %> <%= label_tag :offset, 'h' %> <%= number_field_tag :offset, 0, step: 'any', required: true %></p>
+    <p><%= label_tag :discrete_values, 'Opciones discretas: JSON con CSID de cada opción y su valor numérico' %><br><%= text_area_tag :discrete_values, '{}', rows: 3, cols: 70 %></p>
+    <%= submit_tag 'Añadir correspondencia' %>
+  <% end %>
+  <h3>Comandos</h3>
+  <p>Por defecto actúan los comandos del sistema y sus subsistemas. Desactivar aquí sólo evita su actuación CAD, no su invocación PORIS.</p>
+  <% @commands.each do |command| %>
+    <%= form_tag poris_arch_command_policy_path(@project, @binding, command) do %>
+      <p><%= command.csid %> — <%= command.subject %>
+      <%= select_tag :actuation, options_for_select([['Actuación', '1'], ['Sin actuación CAD', '0']], @binding.command_policies.find_by(command_id: command.id)&.actuation == false ? '0' : '1') %>
+      <%= submit_tag 'Guardar tipo' %></p>
+    <% end %>
+  <% end %>
+<% end %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'poris_viewer/style.css', plugin: 'cosmosys_poris' %>
+  <script type="module">
+    import {createPorisViewerPanel} from <%= raw asset_path('plugin_assets/cosmosys_poris/poris_viewer/prod.js').to_json %>;
+    import {initializeSimulation} from <%= raw asset_path('plugin_assets/cosmosys_poris_arch/simulation.js').to_json %>;
+    initializeSimulation(createPorisViewerPanel);
+  </script>
+<% end %>

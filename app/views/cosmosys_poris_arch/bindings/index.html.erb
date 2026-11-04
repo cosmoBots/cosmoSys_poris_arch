@@ -1,0 +1,16 @@
+<h2>PORIS ↔ CAD</h2>
+<p>Vínculos entre sistemas PORIS y componentes CAD del mismo árbol de proyectos.</p>
+<ul>
+  <% @bindings.each do |binding| %>
+    <li><%= link_to "#{binding.system.csid} #{binding.system.subject} → #{binding.component.csid} #{binding.component.subject}", poris_arch_binding_path(@project, binding) %></li>
+  <% end %>
+</ul>
+<% if User.current.admin? || User.current.allowed_to?(:manage_poris_arch, @project) %>
+  <h3>Nuevo vínculo</h3>
+  <%= form_tag poris_arch_bindings_path(@project) do %>
+    <p><%= label_tag :system_csid, 'CSID del sistema PORIS' %> <%= text_field_tag :system_csid, nil, required: true %></p>
+    <p><%= label_tag :component_csid, 'CSID del componente CAD' %> <%= text_field_tag :component_csid, nil, required: true %></p>
+    <p><%= label_tag :trigger, 'Actuar al' %> <%= select_tag :trigger, options_for_select([['Ejecutar comando de actuación', 'command'], ['Hacer commit', 'commit']]) %></p>
+    <%= submit_tag 'Crear vínculo' %>
+  <% end %>
+<% end %>
