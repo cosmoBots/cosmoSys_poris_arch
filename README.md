@@ -3,6 +3,10 @@
 Version **0.1.0**, first development implementation. Optional integration:
 Architecture and PORIS continue operating independently without this plugin.
 
+> **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
+> Expect defects, incomplete features, performance limits and breaking changes.
+> Do not install it if you require production-level stability and support.
+
 ## Model
 
 - A binding connects a `poris_sys` with an `arch_node` in the **same project
