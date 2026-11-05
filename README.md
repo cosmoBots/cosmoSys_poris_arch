@@ -85,8 +85,9 @@ before granting access to other users.
 
 **Current limitation:** the new integration binding tables are not yet included
 in project snapshots/ODS. Existing PORIS and architectural CAD items continue to
-roundtrip, but their integration bindings must currently be recreated. Do not
-promote this prototype as a release or add deploy pins yet.
+roundtrip, but their integration bindings must currently be recreated. Keep
+this limitation in mind when evaluating the optional deployment set; validate
+your mappings before using imported or copied projects.
 
 ## License
 
