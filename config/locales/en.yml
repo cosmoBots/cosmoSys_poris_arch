@@ -1,0 +1,6 @@
+en:
+  label_poris_arch_runtime_cad: Runtime CAD
+  text_poris_arch_runtime_applied: Confirmed runtime configuration shown in this CAD viewer.
+  text_poris_arch_runtime_waiting: Waiting for the CAD viewer to show the confirmed configuration…
+  text_poris_arch_runtime_idle: No active mapped parameters. The CAD pose is unchanged.
+  text_poris_arch_runtime_observation: Session-local visualization of confirmed runtime state, not physical actuation. No cameras or default positions are saved.

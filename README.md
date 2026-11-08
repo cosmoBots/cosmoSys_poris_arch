@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.0**. Optional integration: Architecture and PORIS work
+Version **0.1.1-dirty** (development). Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
@@ -38,6 +38,14 @@ defaults or partial motion. A rejected PORIS operation suppresses execution.
 
 ## Evaluation
 
+In a PORIS project's **Configuration** and **Automated validation** tabs, a
+configured visible binding also shows the associated CAD. If several bindings
+are available, choose the one to display. The CAD follows confirmed runtime
+values after Commit or each validation step, regardless of command-trigger
+policy. Unsaved panel edits do not move it. Unknown parameters leave the pose
+unchanged; invalid mappings show an error without partial movement. Cameras
+and model defaults are not saved by this visualization.
+
 Open **PORIS ↔ CAD** in the project's menu; create the system/component binding,
 then add parameter mappings and command policies. The binding page shows the
 PORIS panel in the sidebar and the CAD viewer in the body. Configure PORIS and
@@ -51,8 +59,8 @@ trajectories are not included.
 
 ## Installation and scope
 
-Depends on cosmoSys >=0.2.8, Architecture >=0.1.3 and PORIS
->=0.2.4. Install under `plugins/cosmosys_zzporis_arch` so it loads after
+Depends on cosmoSys >=0.2.8, Architecture >=0.1.6 and PORIS
+>=0.2.5. Install under `plugins/cosmosys_zzporis_arch` so it loads after
 its dependencies; the plugin ID is `cosmosys_poris_arch`.
 After migrating its dependencies, run:
 

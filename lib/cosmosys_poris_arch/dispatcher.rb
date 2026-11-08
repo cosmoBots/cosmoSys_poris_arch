@@ -2,18 +2,19 @@ module CosmosysPorisArch
   # Produces validated, session-local actuation batches. No global CAD pose,
   # hardware calls, broker or persisted item defaults are changed here.
   class Dispatcher
-    def initialize(project:, user:, state:, operations:)
+    def initialize(project:, user:, state:, operations:, observation: false)
       @project, @user, @state, @operations = project, user, state, operations
+      @observation = observation
     end
 
     def call
-      return [] unless @operations.all? { |operation| operation['accepted'] }
+      return [] unless @observation || @operations.all? { |operation| operation['accepted'] }
       state = @state.index_by { |row| row.fetch('node_id').to_i }
       bindings = Binding.where(system_id: state.keys).includes(:system, :component)
       bindings.filter_map do |binding|
         next unless binding.visible_to?(@user)
         next unless @user.admin? || @user.allowed_to?(:view_poris_model, binding.system.project)
-        next unless triggered?(binding)
+        next unless @observation || triggered?(binding)
         begin
           raise ArgumentError, binding.errors.full_messages.join('; ') unless binding.valid?
           links = binding.parameter_links.includes(:parameter, :dof).to_a

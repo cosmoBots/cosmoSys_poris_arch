@@ -1,0 +1,6 @@
+es:
+  label_poris_arch_runtime_cad: CAD del runtime
+  text_poris_arch_runtime_applied: Configuración confirmada del runtime reflejada en este visor CAD.
+  text_poris_arch_runtime_waiting: Esperando al visor CAD para mostrar la configuración confirmada…
+  text_poris_arch_runtime_idle: Sin parámetros asociados activos. Se conserva la pose CAD.
+  text_poris_arch_runtime_observation: Visualización local del estado confirmado del runtime, no actuación física. No guarda cámaras ni posiciones predeterminadas.

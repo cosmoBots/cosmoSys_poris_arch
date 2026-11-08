@@ -5,10 +5,10 @@ Redmine::Plugin.register :cosmosys_poris_arch do
   name 'cosmoSys PORIS Architecture'
   author 'cosmoBots.eu'
   description 'Optional bindings between PORIS runtimes and architectural CAD degrees of freedom.'
-  version '0.1.0'
+  version '0.1.1-dirty'
   requires_redmine_plugin :cosmosys, version_or_higher: '0.2.8'
-  requires_redmine_plugin :cosmosys_arch, version_or_higher: '0.1.3'
-  requires_redmine_plugin :cosmosys_poris, version_or_higher: '0.2.4'
+  requires_redmine_plugin :cosmosys_arch, version_or_higher: '0.1.6'
+  requires_redmine_plugin :cosmosys_poris, version_or_higher: '0.2.5'
   permission :view_poris_arch, {'cosmosys_poris_arch/bindings' => %i[index show]}, public: true, read: true
   permission :manage_poris_arch, {'cosmosys_poris_arch/bindings' => %i[create update add_parameter remove_parameter command_policy]}, require: :member
   menu :project_menu, :cosmosys_poris_arch, {controller: 'cosmosys_poris_arch/bindings', action: 'index'},
@@ -17,6 +17,11 @@ Redmine::Plugin.register :cosmosys_poris_arch do
 end
 
 require_dependency File.expand_path('lib/cosmosys_poris_arch/dispatcher', __dir__)
+CosmosysPoris::RuntimeStateObservers.register(:architecture) do |**context|
+  CosmosysPorisArch::Dispatcher.new(**context, operations: [], observation: true).call
+end
+require_dependency File.expand_path('lib/cosmosys_poris_arch/runtime_view_hooks', __dir__)
+
 CosmosysPoris::RuntimeExecutionAdapters.register(:architecture) do |**context|
   CosmosysPorisArch::Dispatcher.new(**context).call
 end

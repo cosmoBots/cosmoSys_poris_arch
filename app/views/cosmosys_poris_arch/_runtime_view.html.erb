@@ -1,0 +1,25 @@
+<section data-poris-runtime-cad data-binding-id="<%= binding.id %>" data-project-id="<%= project.id %>"
+         data-applied-label="<%= l(:text_poris_arch_runtime_applied) %>" data-waiting-label="<%= l(:text_poris_arch_runtime_waiting) %>"
+         data-idle-label="<%= l(:text_poris_arch_runtime_idle) %>"
+         <%= 'hidden' unless %w[configuration automated_validation].include?(@project_tab) %>>
+  <h3><%= l(:label_poris_arch_runtime_cad) %>: <%= binding.component.subject %></h3>
+  <p class="info"><%= l(:text_poris_arch_runtime_observation) %></p>
+  <% if bindings.many? %>
+    <%= form_tag project_poris_viewer_path(project), method: :get do %>
+      <%= hidden_field_tag :tab, @project_tab %>
+      <%= select_tag :cad_binding_id, options_for_select(bindings.map { |entry| ["#{entry.system.csid} — #{entry.component.subject}", entry.id] }, binding.id), aria: {label: l(:label_poris_arch_runtime_cad)} %>
+      <%= submit_tag l(:button_apply) %>
+    <% end %>
+  <% end %>
+  <p data-runtime-cad-status role="status" aria-live="polite"></p>
+  <div id="architecture-cad-item-<%= binding.component.id %>">
+    <%= render partial: 'cosmosys_arch/cad_imports/viewer', locals: {poris_simulation: true} %>
+  </div>
+  <script type="application/json" data-runtime-cad-initial><%= raw json_escape(initial_batch.to_json) %></script>
+</section>
+<% content_for :header_tags do %>
+  <script type="module">
+    import {initializeRuntimeCad} from <%= raw asset_path('plugin_assets/cosmosys_poris_arch/runtime_view.js').to_json %>;
+    initializeRuntimeCad();
+  </script>
+<% end %>
