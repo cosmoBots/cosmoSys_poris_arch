@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.1-dirty** (development). Optional integration: Architecture and PORIS work
+Version **0.1.1**. Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.

@@ -5,7 +5,7 @@ Redmine::Plugin.register :cosmosys_poris_arch do
   name 'cosmoSys PORIS Architecture'
   author 'cosmoBots.eu'
   description 'Optional bindings between PORIS runtimes and architectural CAD degrees of freedom.'
-  version '0.1.1-dirty'
+  version '0.1.1'
   requires_redmine_plugin :cosmosys, version_or_higher: '0.2.8'
   requires_redmine_plugin :cosmosys_arch, version_or_higher: '0.1.6'
   requires_redmine_plugin :cosmosys_poris, version_or_higher: '0.2.5'
