@@ -15,13 +15,15 @@ export function initializeRuntimeCad() {
   };
   let pending = JSON.parse(root.querySelector('[data-runtime-cad-initial]').textContent);
   const apply = () => {
+    status.hidden = true;
     if (!pending) {status.textContent = root.dataset.idleLabel; return;}
-    if (pending.status === 'rejected') {status.textContent = pending.reason; pending = null; return;}
+    if (pending.status === 'rejected') {status.textContent = pending.reason; status.hidden = false; pending = null; return;}
     if (scene.dataset.ready !== 'true') {status.textContent = root.dataset.waitingLabel; return;}
     const detail = {values: pending.values, result: {status:'rejected', reason:'CAD viewer unavailable'}};
     pending = null;
     scene.dispatchEvent(new CustomEvent('architecture:set-values', {detail}));
     status.textContent = detail.result.status === 'applied' ? root.dataset.appliedLabel : detail.result.reason;
+    status.hidden = detail.result.status === 'applied';
   };
   const observer = new MutationObserver(() => {if (scene.dataset.ready === 'true') apply();});
   observer.observe(scene, {attributes:true, attributeFilter:['data-ready']});

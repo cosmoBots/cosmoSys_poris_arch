@@ -3,8 +3,6 @@
          data-applied-label="<%= l(:text_poris_arch_runtime_applied) %>" data-waiting-label="<%= l(:text_poris_arch_runtime_waiting) %>"
          data-idle-label="<%= l(:text_poris_arch_runtime_idle) %>"
          <%= 'hidden' unless %w[configuration automated_validation].include?(@project_tab) %>>
-  <h3><%= l(:label_poris_arch_runtime_cad) %>: <%= binding.component.subject %></h3>
-  <p class="info"><%= l(:text_poris_arch_runtime_observation) %></p>
   <% if bindings.many? %>
     <%= form_tag project_poris_viewer_path(project), method: :get do %>
       <%= hidden_field_tag :tab, @project_tab %>
@@ -12,7 +10,7 @@
       <%= submit_tag l(:button_apply) %>
     <% end %>
   <% end %>
-  <p data-runtime-cad-status role="status" aria-live="polite"></p>
+  <p data-runtime-cad-status role="status" aria-live="polite" hidden></p>
   <div id="architecture-cad-item-<%= binding.component.id %>">
     <%= render partial: 'cosmosys_arch/cad_imports/viewer', locals: {poris_simulation: true, presentation_only: true} %>
   </div>
