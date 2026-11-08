@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.2-dirty**. Optional integration: Architecture and PORIS work
+Version **0.1.2**. Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
@@ -60,8 +60,8 @@ trajectories are not included.
 
 ## Installation and scope
 
-Depends on cosmoSys >=0.2.8, Architecture >=0.1.6 and PORIS
->=0.2.5. Install under `plugins/cosmosys_zzporis_arch` so it loads after
+Depends on cosmoSys >=0.2.10, Architecture >=0.1.7 and PORIS
+>=0.2.6. Install under `plugins/cosmosys_zzporis_arch` so it loads after
 its dependencies; the plugin ID is `cosmosys_poris_arch`.
 After migrating its dependencies, run:
 
