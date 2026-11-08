@@ -17,9 +17,10 @@ independently without this plugin.
   same DoF in mutually exclusive PORIS modes. The binding/parameter/DoF triple
   is unique. If two active parameters target the same DoF, the whole batch is
   rejected rather than choosing a writer or depending on database order.
-- Conversion is `CAD = m × x + h`. Numeric PORIS options supply their runtime
-  data. Discrete options require an explicit JSON mapping of **value CSID** to
-  numeric `x`, for example `{"POR-0012": 45}`; conversion follows the mapping.
+- Conversion is `CAD = m × x + h`, using confirmed PORIS runtime data.
+  For an enumerated option, define its project variable `<normalized-CSID>_default`:
+  `pMAX-0008` uses `pMAX_0008_default`. The variable's value must be a finite
+  number visible in the same project tree. There is no separate numeric map.
 - Default trigger: **command**. Commands belonging to the bound system and its
   subsystems act by default; an individual command can disable CAD actuation.
   Alternatively choose **commit**, including a commit carried by a command
@@ -69,9 +70,13 @@ After migrating its dependencies, run:
 RAILS_ENV=production bundle exec rake redmine:plugins:migrate NAME=cosmosys_poris_arch
 ```
 
+Back up the database before migrating. The former explicit-map column is
+removed; links and their conversion coefficients are preserved. Removed map
+data can only be recovered from the backup.
+
 Restart Redmine, enable the integration and configure bindings for your model.
-Choose conversions and label mappings explicitly; there are no assumed HOME,
-PARK or TECH poses.
+Define enumerated values in project variables and choose conversions explicitly;
+there are no assumed HOME, PARK or TECH poses.
 
 Permissions: `view_poris_arch` to inspect; `manage_poris_arch` and `edit_issues`
 on both endpoint projects to edit (administrators allowed). Each runtime action

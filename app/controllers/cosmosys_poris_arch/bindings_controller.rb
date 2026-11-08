@@ -46,7 +46,7 @@ module CosmosysPorisArch
 
     def add_parameter
       @binding.parameter_links.create!(parameter: resolve_csid(params.require(:parameter_csid)), dof: resolve_csid(params.require(:dof_csid)),
-        multiplier: params.require(:multiplier), offset: params.require(:offset), discrete_values: params[:discrete_values].presence || '{}')
+        multiplier: params.require(:multiplier), offset: params.require(:offset))
       redirect_to poris_arch_binding_path(@project, @binding)
     end
 

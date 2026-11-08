@@ -13,10 +13,10 @@
 <script type="application/json" id="poris-arch-model"><%= raw json_escape(@model_xml.to_json) %></script>
 <script type="application/json" id="poris-arch-state"><%= raw json_escape(@runtime_state.to_json) %></script>
 <h3>Correspondencias</h3>
-<table class="list"><thead><tr><th>Parámetro</th><th>Grado de libertad</th><th>Conversión CAD = m × x + h</th><th>Opciones (CSID → x)</th><th></th></tr></thead><tbody>
+<table class="list"><thead><tr><th>Parámetro</th><th>Grado de libertad</th><th>Conversión CAD = m × x + h</th><th></th></tr></thead><tbody>
 <% @binding.parameter_links.includes(:parameter, :dof).each do |link| %>
   <% next unless link.parameter.visible?(User.current) && link.dof.visible?(User.current) %>
-  <tr><td><%= link.parameter.csid %> — <%= link.parameter.subject %></td><td><%= link.dof.csid %> — <%= link.dof.subject %></td><td><%= link.multiplier %> × x + <%= link.offset %></td><td><code><%= link.discrete_values %></code></td><td>
+  <tr><td><%= link.parameter.csid %> — <%= link.parameter.subject %></td><td><%= link.dof.csid %> — <%= link.dof.subject %></td><td><%= link.multiplier %> × x + <%= link.offset %></td><td>
     <% if @binding.editable_by?(User.current) %><%= button_to 'Quitar', poris_arch_remove_parameter_path(@project, @binding, link) %><% end %>
   </td></tr>
 <% end %>
@@ -31,7 +31,6 @@
     <p><%= label_tag :parameter_csid, 'Parámetro PORIS' %> <%= select_tag :parameter_csid, options_for_select(@parameters.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
     <p><%= label_tag :dof_csid, 'Grado de libertad' %> <%= select_tag :dof_csid, options_for_select(@dofs.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
     <p><%= label_tag :multiplier, 'm' %> <%= number_field_tag :multiplier, 1, step: 'any', required: true %> <%= label_tag :offset, 'h' %> <%= number_field_tag :offset, 0, step: 'any', required: true %></p>
-    <p><%= label_tag :discrete_values, 'Opciones discretas: JSON con CSID de cada opción y su valor numérico' %><br><%= text_area_tag :discrete_values, '{}', rows: 3, cols: 70 %></p>
     <%= submit_tag 'Añadir correspondencia' %>
   <% end %>
   <h3>Comandos</h3>
