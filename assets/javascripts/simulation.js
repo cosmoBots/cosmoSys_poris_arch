@@ -6,20 +6,21 @@ export function initializeSimulation(createPanel) {
     const scene = root.querySelector('#arch-cad-controls');
     const status = document.querySelector('[data-simulation-status]');
     let pending = null;
-    const send = batch => {
-      if (scene.dataset.ready !== 'true') { pending = batch; status.textContent = 'Orden validada; esperando al visor CAD…'; return; }
+    const send = (batch, command = false) => {
+      const prefix = command ? 'Comando ejecutado. ' : '';
+      if (scene.dataset.ready !== 'true') { pending = {batch, command}; status.textContent = `${prefix}Configuración confirmada; esperando al visor CAD…`; return; }
       const detail = {values: batch.values, result: {status: 'rejected', reason: 'CAD viewer not ready'}};
       scene.dispatchEvent(new CustomEvent('architecture:set-values', {detail}));
-      status.textContent = detail.result.status === 'applied' ? 'Valores aplicados al CAD de esta sesión.' : `No aplicado: ${detail.result.reason}`;
+      status.textContent = prefix + (detail.result.status === 'applied' ? 'Configuración confirmada reflejada en el CAD.' : `No aplicado: ${detail.result.reason}`);
     };
     const observer = new MutationObserver(() => {
       if (scene.dataset.ready === 'true') {
         observer.disconnect();
-        status.textContent = 'Visor listo. Configure PORIS y ejecute un comando.';
-        if (pending) { const batch = pending; pending = null; send(batch); }
+        status.textContent = 'Visor listo. Configure PORIS y pulse Commit.';
+        if (pending) { const {batch, command} = pending; pending = null; send(batch, command); }
       }
     });
-    if (scene.dataset.ready === 'true') status.textContent = 'Visor listo. Configure PORIS y ejecute un comando.';
+    if (scene.dataset.ready === 'true') status.textContent = 'Visor listo. Configure PORIS y pulse Commit.';
     else observer.observe(scene, {attributes: true, attributeFilter: ['data-ready']});
     window.addEventListener('pagehide', () => observer.disconnect(), {once: true});
     createPanel('', '#poris-arch-panel', {
@@ -28,10 +29,15 @@ export function initializeSimulation(createPanel) {
       initialState: JSON.parse(document.getElementById('poris-arch-state').textContent),
       commitUrl: root.dataset.commitUrl, csrfToken: root.dataset.csrfToken,
       onCommit: result => {
-        const batch = result.executions?.architecture?.find(entry => String(entry.binding_id) === root.dataset.bindingId);
-        if (!batch) { status.textContent = 'Configuración aceptada sin actuación CAD.'; return; }
-        if (batch.status === 'rejected') { status.textContent = `No aplicado: ${batch.reason}`; return; }
-        send(batch);
+        // As in the project runtime viewer, observe confirmed state, not
+        // command-triggered execution batches or unsaved panel drafts.
+        const batch = result.observations?.architecture?.find(entry => String(entry.binding_id) === root.dataset.bindingId);
+        const command = result.operations?.some(operation => operation.type === 'invoke_command' && operation.accepted);
+        const prefix = command ? 'Comando ejecutado. ' : '';
+        pending = null;
+        if (!batch) { status.textContent = `${prefix}Configuración confirmada sin cambios CAD.`; return; }
+        if (batch.status === 'rejected') { status.textContent = `${prefix}No aplicado: ${batch.reason}`; return; }
+        send(batch, command);
       }
     });
   };

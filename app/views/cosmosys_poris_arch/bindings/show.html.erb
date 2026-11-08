@@ -1,6 +1,6 @@
 <h2><%= @binding.system.subject %> → <%= @binding.component.subject %></h2>
 <p><%= link_to @binding.system.csid, issue_path(@binding.system) %> ↔ <%= link_to @binding.component.csid, issue_path(@binding.component) %></p>
-<p>Simulación local de esta sesión. No modifica el CAD original, los valores predeterminados ni equipos reales.</p>
+<p>Simulación local de esta sesión. Commit refleja la configuración confirmada en el CAD; Command ejecuta el comando PORIS. No modifica el CAD original, los valores predeterminados ni equipos reales.</p>
 <div id="poris-arch-simulation" data-binding-id="<%= @binding.id %>" data-commit-url="<%= commit_project_poris_state_path(@binding.system.project) %>" data-csrf-token="<%= form_authenticity_token %>">
   <%= render partial: 'cosmosys_arch/cad_imports/viewer', locals: {poris_simulation: true} %>
 </div>
@@ -23,6 +23,7 @@
 </tbody></table>
 <% if @binding.editable_by?(User.current) %>
   <%= form_tag poris_arch_binding_path(@project, @binding) do %>
+    <p>La política de ejecución no condiciona este visor: siempre refleja la configuración confirmada al hacer Commit.</p>
     <p><%= label_tag :trigger, 'Actuar al' %> <%= select_tag :trigger, options_for_select([['Ejecutar comando de actuación', 'command'], ['Hacer commit', 'commit']], @binding.trigger) %> <%= submit_tag 'Guardar política' %></p>
   <% end %>
   <h3>Añadir correspondencia</h3>

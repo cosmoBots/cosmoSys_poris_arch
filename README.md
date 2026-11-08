@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.1**. Optional integration: Architecture and PORIS work
+Version **0.1.2-dirty**. Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
@@ -48,9 +48,10 @@ and model defaults are not saved by this visualization.
 
 Open **PORIS ↔ CAD** in the project's menu; create the system/component binding,
 then add parameter mappings and command policies. The binding page shows the
-PORIS panel in the sidebar and the CAD viewer in the body. Configure PORIS and
-use the selected trigger to apply accepted runtime values to that page's CAD.
-Manual sliders remain available for inspection.
+PORIS panel in the sidebar and the CAD viewer in the body. That viewer also
+follows confirmed runtime values on **Commit**, regardless of command policy.
+**Command** reports command execution; it is not required to update the CAD.
+Unsaved edits do not move the model. Manual sliders remain available for inspection.
 
 Motion is local to the current page, not broadcast to other users or tabs.
 Neither the original geometry nor item defaults are changed. This is a
