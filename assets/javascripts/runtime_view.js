@@ -4,6 +4,15 @@ export function initializeRuntimeCad() {
   root.dataset.initialized = 'true';
   const scene = root.querySelector('#arch-cad-controls');
   const status = root.querySelector('[data-runtime-cad-status]');
+  const parking = document.querySelector('[data-poris-runtime-cad-parking]');
+  const dock = () => {
+    const slot = document.querySelector('[data-poris-runtime-view-slot]');
+    if (slot && !root.hidden) {
+      slot.appendChild(root);
+      // Native viewer may have initialized while its parking host was hidden.
+      window.dispatchEvent(new Event('resize'));
+    }
+  };
   let pending = JSON.parse(root.querySelector('[data-runtime-cad-initial]').textContent);
   const apply = () => {
     if (!pending) {status.textContent = root.dataset.idleLabel; return;}
@@ -23,6 +32,9 @@ export function initializeRuntimeCad() {
     apply();
   };
   const selectTab = event => {
+    // Park before the tab loader replaces its DOM. Preserve the renderer and
+    // confirmed pose across tabs, rather than orphaning a live WebGL canvas.
+    if (parking) parking.appendChild(root);
     root.hidden = !['configuration','automated_validation'].includes(event.detail.tab);
     const input = root.querySelector('input[name="tab"]');
     if (input) input.value = event.detail.tab;
@@ -34,10 +46,13 @@ export function initializeRuntimeCad() {
   });
   document.addEventListener('poris:runtime-confirmed', receive);
   document.addEventListener('poris:tab-selected', selectTab);
+  document.addEventListener('poris:tab-ready', dock);
   window.addEventListener('pagehide', () => {
     observer.disconnect();
     document.removeEventListener('poris:runtime-confirmed', receive);
     document.removeEventListener('poris:tab-selected', selectTab);
+    document.removeEventListener('poris:tab-ready', dock);
   }, {once:true});
   apply();
+  dock();
 }
