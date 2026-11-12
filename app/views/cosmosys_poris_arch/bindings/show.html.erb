@@ -16,8 +16,18 @@
 <table class="list"><thead><tr><th>Parámetro</th><th>Grado de libertad</th><th>Conversión CAD = m × x + h</th><th></th></tr></thead><tbody>
 <% @binding.parameter_links.includes(:parameter, :dof).each do |link| %>
   <% next unless link.parameter.visible?(User.current) && link.dof.visible?(User.current) %>
-  <tr><td><%= link.parameter.csid %> — <%= link.parameter.subject %></td><td><%= link.dof.csid %> — <%= link.dof.subject %></td><td><%= link.multiplier %> × x + <%= link.offset %></td><td>
-    <% if @binding.editable_by?(User.current) %><%= button_to 'Quitar', poris_arch_remove_parameter_path(@project, @binding, link) %><% end %>
+  <tr id="parameter-link-<%= link.id %>"><td><%= link.parameter.csid %> — <%= link.parameter.subject %></td><td><%= link.dof.csid %> — <%= link.dof.subject %></td><td><%= link.multiplier %> × x + <%= link.offset %></td><td>
+    <% if @binding.editable_by?(User.current) %>
+      <details>
+        <summary><%= t(:button_edit) %></summary>
+        <%= form_tag poris_arch_update_parameter_path(@project, @binding, link) do %>
+          <%= render partial: 'parameter_fields', locals: {link: link} %>
+          <%= submit_tag t(:button_save) %>
+          <%= link_to t(:button_cancel), poris_arch_binding_path(@project, @binding, anchor: "parameter-link-#{link.id}") %>
+        <% end %>
+      </details>
+      <%= button_to 'Quitar', poris_arch_remove_parameter_path(@project, @binding, link) %>
+    <% end %>
   </td></tr>
 <% end %>
 </tbody></table>
@@ -28,9 +38,7 @@
   <% end %>
   <h3>Añadir correspondencia</h3>
   <%= form_tag poris_arch_parameters_path(@project, @binding) do %>
-    <p><%= label_tag :parameter_csid, 'Parámetro PORIS' %> <%= select_tag :parameter_csid, options_for_select(@parameters.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
-    <p><%= label_tag :dof_csid, 'Grado de libertad' %> <%= select_tag :dof_csid, options_for_select(@dofs.map { |i| ["#{i.csid} — #{i.subject}", i.csid] }) %></p>
-    <p><%= label_tag :multiplier, 'm' %> <%= number_field_tag :multiplier, 1, step: 'any', required: true %> <%= label_tag :offset, 'h' %> <%= number_field_tag :offset, 0, step: 'any', required: true %></p>
+    <%= render partial: 'parameter_fields', locals: {link: nil} %>
     <%= submit_tag 'Añadir correspondencia' %>
   <% end %>
   <h3>Comandos</h3>

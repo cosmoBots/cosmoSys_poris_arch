@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.2**. Optional integration: Architecture and PORIS work
+Version **0.1.3-dirty** (development). Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
@@ -53,6 +53,11 @@ PORIS panel in the sidebar and the CAD viewer in the body. That viewer also
 follows confirmed runtime values on **Commit**, regardless of command policy.
 **Command** reports command execution; it is not required to update the CAD.
 Unsaved edits do not move the model. Manual sliders remain available for inspection.
+
+Choose **Edit** on an existing mapping to change its PORIS parameter, CAD degree
+of freedom or conversion coefficients `m` and `h`, then **Save**. Editing keeps
+the same mapping; invalid or duplicate mappings are rejected without replacing
+the saved values. **Cancel** discards the form edits.
 
 Motion is local to the current page, not broadcast to other users or tabs.
 Neither the original geometry nor item defaults are changed. This is a

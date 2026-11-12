@@ -1,4 +1,6 @@
 es:
+  label_poris_arch_parameter: Parámetro PORIS
+  label_poris_arch_dof: Grado de libertad
   label_poris_arch_runtime_cad: CAD del runtime
   text_poris_arch_runtime_applied: Configuración confirmada del runtime reflejada en este visor CAD.
   text_poris_arch_runtime_waiting: Esperando al visor CAD para mostrar la configuración confirmada…

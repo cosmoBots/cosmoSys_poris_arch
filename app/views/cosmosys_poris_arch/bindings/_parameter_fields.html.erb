@@ -1,0 +1,9 @@
+<% prefix = link ? "parameter-link-#{link.id}" : 'new-parameter-link' %>
+<p><%= label_tag "#{prefix}-parameter", t(:label_poris_arch_parameter) %>
+  <%= select_tag :parameter_csid, options_for_select(@parameters.map { |item| ["#{item.csid} — #{item.subject}", item.csid] }, link&.parameter&.csid), id: "#{prefix}-parameter" %></p>
+<p><%= label_tag "#{prefix}-dof", t(:label_poris_arch_dof) %>
+  <%= select_tag :dof_csid, options_for_select(@dofs.map { |item| ["#{item.csid} — #{item.subject}", item.csid] }, link&.dof&.csid), id: "#{prefix}-dof" %></p>
+<p><%= label_tag "#{prefix}-multiplier", 'm' %>
+  <%= number_field_tag :multiplier, link ? link.multiplier : 1, step: 'any', required: true, id: "#{prefix}-multiplier" %>
+  <%= label_tag "#{prefix}-offset", 'h' %>
+  <%= number_field_tag :offset, link ? link.offset : 0, step: 'any', required: true, id: "#{prefix}-offset" %></p>

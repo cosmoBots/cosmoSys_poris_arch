@@ -45,8 +45,15 @@ module CosmosysPorisArch
     end
 
     def add_parameter
-      @binding.parameter_links.create!(parameter: resolve_csid(params.require(:parameter_csid)), dof: resolve_csid(params.require(:dof_csid)),
-        multiplier: params.require(:multiplier), offset: params.require(:offset))
+      @binding.parameter_links.create!(parameter_link_attributes)
+      redirect_to poris_arch_binding_path(@project, @binding)
+    end
+
+    def update_parameter
+      link = @binding.parameter_links.find(params[:link_id])
+      raise Unauthorized unless link.parameter.visible?(User.current) && link.dof.visible?(User.current)
+
+      link.update!(parameter_link_attributes)
       redirect_to poris_arch_binding_path(@project, @binding)
     end
 
@@ -81,6 +88,11 @@ module CosmosysPorisArch
       matches = Issue.where(project_id: @project.root.self_and_descendants.select(:id), csid: csid).to_a
       raise ArgumentError, "CSID unavailable or ambiguous: #{csid}" unless matches.one? && matches.first.visible?(User.current)
       matches.first
+    end
+
+    def parameter_link_attributes
+      {parameter: resolve_csid(params.require(:parameter_csid)), dof: resolve_csid(params.require(:dof_csid)),
+        multiplier: params.require(:multiplier), offset: params.require(:offset)}
     end
 
     def resolve_command

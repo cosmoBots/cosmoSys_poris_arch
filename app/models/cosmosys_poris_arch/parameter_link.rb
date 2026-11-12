@@ -36,7 +36,8 @@ module CosmosysPorisArch
       unless dof.cosmosys_item_kind_key == 'arch_dof' && binding.component_items.exists?(id: dof.id)
         errors.add(:dof, 'must belong to the bound component subtree')
       end
-      errors.add(:base, 'Conversion coefficients must be finite') unless [multiplier, offset].all? { |n| n.is_a?(Numeric) && n.finite? }
+      coefficients = [multiplier_before_type_cast, offset_before_type_cast].map { |value| Float(value, exception: false) }
+      errors.add(:base, 'Conversion coefficients must be finite') unless coefficients.all? { |value| value&.finite? }
     end
   end
 end
