@@ -4,9 +4,9 @@
          data-idle-label="<%= l(:text_poris_arch_runtime_idle) %>"
          <%= 'hidden' unless %w[configuration automated_validation].include?(@project_tab) %>>
   <% if bindings.many? %>
-    <%= form_tag project_poris_viewer_path(project), method: :get do %>
+    <%= form_tag project_poris_viewer_path(project), method: :get, data: {runtime_cad_selector: true} do %>
       <%= hidden_field_tag :tab, @project_tab %>
-      <%= select_tag :cad_binding_id, options_for_select(bindings.map { |entry| ["#{entry.system.csid} — #{entry.component.subject}", entry.id] }, binding.id), aria: {label: l(:label_poris_arch_runtime_cad)} %>
+      <%= select_tag :cad_binding_id, options_for_select(bindings.map { |entry| ["#{entry.system.csid} — #{entry.component.csid}: #{entry.component.subject}", entry.id] }, binding.id), aria: {label: l(:label_poris_arch_runtime_cad)} %>
       <%= submit_tag l(:button_apply) %>
     <% end %>
   <% end %>

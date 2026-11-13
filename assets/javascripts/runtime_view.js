@@ -2,6 +2,12 @@ export function initializeRuntimeCad() {
   const root = document.querySelector('[data-poris-runtime-cad]');
   if (!root || root.dataset.initialized) return;
   root.dataset.initialized = 'true';
+  // Changing the displayed choice must also replace the actual CAD/binding.
+  // A select alone only changes the form draft, leaving the old scene active.
+  const selectorForm = root.querySelector('[data-runtime-cad-selector]');
+  selectorForm?.querySelector('select[name="cad_binding_id"]')?.addEventListener('change', () => {
+    selectorForm.requestSubmit();
+  });
   const scene = root.querySelector('#arch-cad-controls');
   const status = root.querySelector('[data-runtime-cad-status]');
   const parking = document.querySelector('[data-poris-runtime-cad-parking]');
