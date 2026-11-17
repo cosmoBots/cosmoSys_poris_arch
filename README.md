@@ -18,8 +18,8 @@ independently without this plugin.
   is unique. If two active parameters target the same DoF, the whole batch is
   rejected rather than choosing a writer or depending on database order.
 - Conversion is `CAD = m × x + h`, using confirmed PORIS runtime data.
-  For an enumerated option, define its project variable `<normalized-CSID>_default`:
-  `pMAX-0008` uses `pMAX_0008_default`. The variable's value must be a finite
+  For an enumerated option, define its project variable `<normalized-CSID>_value`:
+  `pMAX-0008` uses `pMAX_0008_value`. The variable's value must be a finite
   number visible in the same project tree. There is no separate numeric map.
 - Default trigger: **command**. Commands belonging to the bound system and its
   subsystems act by default; an individual command can disable CAD actuation.
