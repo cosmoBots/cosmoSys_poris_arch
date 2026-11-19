@@ -19,11 +19,19 @@ module CosmosysPorisArch
           "(selected: #{option.subject} [#{option.csid}]; kind: #{option.pr_value_kind}; " \
           "runtime data: #{row['data'].inspect[0, 120]})"
       end
-      value = multiplier * number + offset
-      unless value.finite? && value.between?(dof.arch_min, dof.arch_max)
-        raise ArgumentError, "#{dof.csid}: converted value #{value} is outside CAD limits"
+      product = multiplier * number
+      value = product + offset
+      if value.finite?
+        return value if value.between?(dof.arch_min, dof.arch_max)
+
+        # Cancellation in m*x+h can leave a few floating-point bits beyond a
+        # boundary (especially zero). Snap only that arithmetic roundoff, at
+        # the scale of the operands and the approached boundary, not CAD step.
+        boundary = value < dof.arch_min ? dof.arch_min : dof.arch_max
+        tolerance = 8 * Float::EPSILON * [product.abs, offset.abs, boundary.abs].max
+        return boundary if (value - boundary).abs <= tolerance
       end
-      value
+      raise ArgumentError, "#{dof.csid}: converted value #{value} is outside CAD limits"
     end
 
     private
