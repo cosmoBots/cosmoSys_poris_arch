@@ -1,4 +1,7 @@
 es:
+  button_poris_arch_unlink: Desvincular PORIS y CAD
+  text_poris_arch_unlink_confirm: "¿Eliminar esta asociación y sus correspondencias? Se conservarán los modelos PORIS y CAD, sus ítems y archivos."
+  notice_poris_arch_unlinked: Asociación PORIS–CAD eliminada.
   label_poris_arch_parameter: Parámetro PORIS
   label_poris_arch_dof: Grado de libertad
   label_poris_arch_runtime_cad: CAD del runtime

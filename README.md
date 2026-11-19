@@ -1,6 +1,6 @@
 # cosmoSys PORIS Architecture
 
-Version **0.1.3** (experimental). Optional integration: Architecture and PORIS work
+Version **0.1.4-dirty** (experimental development). Optional integration: Architecture and PORIS work
 independently without this plugin.
 
 > **EXPERIMENTAL — opt-in:** This plugin is not part of the production core.
@@ -34,8 +34,11 @@ without a selected value remains an error, not an implicit skip.
 
 All links and active conversions are checked before producing a batch. Missing
 translations, invisible endpoints, missing runtime rows, non-finite numbers or
-out-of-range results reject the entire binding's batch: no silent clamping,
-defaults or partial motion. A rejected PORIS operation suppresses execution.
+out-of-range results reject the entire binding's batch. Only floating-point
+roundoff immediately beyond a bound is snapped to that exact bound, using
+the scale of the affine calculation; in-range values retain their precision.
+Missing translations remain errors, and rejected batches produce no partial
+motion. A rejected PORIS operation suppresses execution.
 
 ## Evaluation
 
@@ -48,7 +51,13 @@ unchanged; invalid mappings show an error without partial movement. Cameras
 and model defaults are not saved by this visualization.
 
 Open **PORIS ↔ CAD** in the project's menu; create the system/component binding,
-then add parameter mappings and command policies. The binding page shows the
+then add parameter mappings and command policies. Use **Unlink PORIS and CAD**
+on the binding page to remove an association
+when needed. Confirmation is required. This removes only that binding, its
+parameter mappings and command policies; models, items and CAD files remain.
+The action requires management and item-editing permissions on both projects.
+
+The binding page shows the
 PORIS panel in the sidebar and the CAD viewer in the body. That viewer also
 follows confirmed runtime values on **Commit**, regardless of command policy.
 **Command** reports command execution; it is not required to update the CAD.

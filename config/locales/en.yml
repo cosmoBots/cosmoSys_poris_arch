@@ -1,4 +1,7 @@
 en:
+  button_poris_arch_unlink: Unlink PORIS and CAD
+  text_poris_arch_unlink_confirm: "Remove this binding and its mappings? The PORIS and CAD models, their items and files will be preserved."
+  notice_poris_arch_unlinked: PORIS–CAD binding removed.
   label_poris_arch_parameter: PORIS parameter
   label_poris_arch_dof: Degree of freedom
   label_poris_arch_runtime_cad: Runtime CAD

@@ -3,6 +3,7 @@ scope 'projects/:project_id/poris-arch', module: 'cosmosys_poris_arch' do
   post '/', to: 'bindings#create'
   get '/:id', to: 'bindings#show', as: :poris_arch_binding
   post '/:id', to: 'bindings#update'
+  post '/:id/remove', to: 'bindings#destroy', as: :poris_arch_remove_binding
   post '/:id/parameters', to: 'bindings#add_parameter', as: :poris_arch_parameters
   post '/:id/parameters/:link_id', to: 'bindings#update_parameter', as: :poris_arch_update_parameter
   post '/:id/parameters/:link_id/remove', to: 'bindings#remove_parameter', as: :poris_arch_remove_parameter

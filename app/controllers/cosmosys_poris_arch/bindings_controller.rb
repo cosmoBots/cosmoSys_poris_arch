@@ -44,6 +44,11 @@ module CosmosysPorisArch
       redirect_to poris_arch_binding_path(@project, @binding)
     end
 
+    def destroy
+      @binding.destroy!
+      redirect_to poris_arch_bindings_path(@project), notice: t(:notice_poris_arch_unlinked)
+    end
+
     def add_parameter
       @binding.parameter_links.create!(parameter_link_attributes)
       redirect_to poris_arch_binding_path(@project, @binding)

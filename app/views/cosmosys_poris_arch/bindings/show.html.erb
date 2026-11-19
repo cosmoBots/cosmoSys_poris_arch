@@ -1,5 +1,9 @@
 <h2><%= @binding.system.subject %> → <%= @binding.component.subject %></h2>
 <p><%= link_to @binding.system.csid, issue_path(@binding.system) %> ↔ <%= link_to @binding.component.csid, issue_path(@binding.component) %></p>
+<% if @binding.editable_by?(User.current) %>
+  <%= button_to t(:button_poris_arch_unlink), poris_arch_remove_binding_path(@project, @binding),
+        data: {confirm: t(:text_poris_arch_unlink_confirm)}, class: 'icon icon-del' %>
+<% end %>
 <p>Simulación local de esta sesión. Commit refleja la configuración confirmada en el CAD; Command ejecuta el comando PORIS. No modifica el CAD original, los valores predeterminados ni equipos reales.</p>
 <div id="poris-arch-simulation" data-binding-id="<%= @binding.id %>" data-commit-url="<%= commit_project_poris_state_path(@binding.system.project) %>" data-csrf-token="<%= form_authenticity_token %>">
   <%= render partial: 'cosmosys_arch/cad_imports/viewer', locals: {poris_simulation: true} %>
